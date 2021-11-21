@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gst_todo/src/features/home/pages/home.dart';
 import 'package:provider/provider.dart';
 import 'settings_controller.dart';
 
@@ -19,26 +21,44 @@ class SettingsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: DropdownButton<ThemeMode>(
-          value: Provider.of<SettingsController>(context).themeMode,
-          onChanged: Provider.of<SettingsController>(context).updateThemeMode,
-          items: const [
-            DropdownMenuItem(
-              value: ThemeMode.system,
-              child: Text('System Theme'),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: DropdownButton<ThemeMode>(
+              value: Provider.of<SettingsController>(context).themeMode,
+              onChanged:
+                  Provider.of<SettingsController>(context).updateThemeMode,
+              items: const [
+                DropdownMenuItem(
+                  value: ThemeMode.system,
+                  child: Text('System Theme'),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.light,
+                  child: Text('Light Theme'),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.dark,
+                  child: Text('Dark Theme'),
+                )
+              ],
             ),
-            DropdownMenuItem(
-              value: ThemeMode.light,
-              child: Text('Light Theme'),
+          ),
+          Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    HomePage.routeName, (route) => false);
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(100, 45),
+              ),
+              child: const Text("LogOut"),
             ),
-            DropdownMenuItem(
-              value: ThemeMode.dark,
-              child: Text('Dark Theme'),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

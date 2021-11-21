@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:gst_todo/src/features/authentication/pages/ligin.dart';
 import 'package:gst_todo/src/features/home/pages/home.dart';
 import 'package:provider/provider.dart';
 import 'sample_feature/sample_item_details_view.dart';
@@ -30,7 +32,13 @@ class MyApp extends StatelessWidget {
           ],
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,
-          theme: ThemeData(),
+          theme: ThemeData(
+            inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
           darkTheme: ThemeData.dark(),
           themeMode: Provider.of<SettingsController>(context).themeMode,
           onGenerateRoute: (RouteSettings routeSettings) {
@@ -49,6 +57,13 @@ class MyApp extends StatelessWidget {
               },
             );
           },
+          home: Builder(builder: (context) {
+            if (FirebaseAuth.instance.currentUser != null) {
+              return const HomePage();
+            } else {
+              return const LoginPage();
+            }
+          }),
         );
       },
     );

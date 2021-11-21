@@ -5,6 +5,7 @@ class BottomIndexController with ChangeNotifier {
   final int _maxIndex = 1;
   int get index => _index;
   set setIndex(int value) {
+    if (value == _index) return;
     if (value < 0 || value > _maxIndex) return;
     _index = value;
     notifyListeners();
