@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gst_todo/src/features/authentication/pages/ligin.dart';
 import 'package:gst_todo/src/features/home/pages/home.dart';
 import 'package:provider/provider.dart';
-import 'sample_feature/sample_item_details_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -48,8 +47,6 @@ class MyApp extends StatelessWidget {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return const SettingsView();
-                  case SampleItemDetailsView.routeName:
-                    return const SampleItemDetailsView();
                   case HomePage.routeName:
                   default:
                     return const HomePage();

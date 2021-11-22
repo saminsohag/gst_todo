@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gst_todo/src/features/home/controllers/bottom_index.dart';
 import 'package:gst_todo/src/features/home/pages/done.dart';
 import 'package:gst_todo/src/features/home/pages/pending.dart';
+import 'package:gst_todo/src/features/home/pages/profile_drawer.dart';
 import 'package:gst_todo/src/settings/settings_view.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,60 +37,7 @@ class _HomePageState extends State<HomePage> {
               icon: const Icon(Icons.settings))
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              color: Theme.of(context).primaryColor,
-              height: 200,
-              child: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "Samin Yeasar sohag",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 23,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Column(
-              children: const [
-                ListTile(
-                  title: Text("GST ROLL:"),
-                  trailing: Text("100203"),
-                ),
-                ListTile(
-                  title: Text("GST Application Id:"),
-                  trailing: Text("100203"),
-                ),
-                ListTile(
-                  title: Text("GST Password:"),
-                  trailing: Text("100203"),
-                ),
-                ListTile(
-                  title: Text("HSC Roll:"),
-                  trailing: Text("146593"),
-                ),
-                ListTile(
-                  title: Text("SSC Roll:"),
-                  trailing: Text("239775"),
-                ),
-                ListTile(
-                  title: Text("HSC Registration No:"),
-                  trailing: Text("1517740531"),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      drawer: const ProfileDrawer(),
       body: AnimatedBuilder(
           animation: _bottomIndexController,
           builder: (context, snapshot) {
