@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gst_todo/src/common/controllers/button_state_controller.dart';
+import 'package:gst_todo/src/common/widgets/coustome_snack_bar.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key, required this.documentSnapshot})
@@ -192,65 +193,105 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 },
                 child: const Text("Cancle"),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_saveController.isLoading) return;
-                  _saveController.setIsLoading = true;
-                  if (widget.documentSnapshot.exists) {
-                    await widget.documentSnapshot.reference.update(
-                      {
-                        "name": (_name.text == "") ? null : _name.text,
-                        "gstRoll": (_gstRoll.text == "") ? null : _gstRoll.text,
-                        "gstApplicationId": (_gstApplicationId.text == "")
-                            ? null
-                            : _gstApplicationId.text,
-                        "gstPassword": (_gstPassword.text == "")
-                            ? null
-                            : _gstPassword.text,
-                        "hscRoll": (_hscRoll.text == "") ? null : _hscRoll.text,
-                        "hscPassingYear": (_hscPassingYear.text == "")
-                            ? null
-                            : _hscPassingYear.text,
-                        "sscRoll": (_sscRoll.text == "") ? null : _sscRoll.text,
-                        "sscPassingYear": (_sscPassingYear.text == "")
-                            ? null
-                            : _sscPassingYear.text,
-                        "hscRegistrationId": (_hscRegistrationId.text == "")
-                            ? null
-                            : _hscRegistrationId.text,
+              AnimatedBuilder(
+                  animation: _saveController,
+                  builder: (context, child) {
+                    return ElevatedButton(
+                      onPressed: () async {
+                        if (_saveController.isLoading) return;
+                        _saveController.setIsLoading = true;
+                        if (widget.documentSnapshot.exists) {
+                          await widget.documentSnapshot.reference.update(
+                            {
+                              "name": (_name.text == "") ? null : _name.text,
+                              "gstRoll":
+                                  (_gstRoll.text == "") ? null : _gstRoll.text,
+                              "gstApplicationId": (_gstApplicationId.text == "")
+                                  ? null
+                                  : _gstApplicationId.text,
+                              "gstPassword": (_gstPassword.text == "")
+                                  ? null
+                                  : _gstPassword.text,
+                              "hscRoll":
+                                  (_hscRoll.text == "") ? null : _hscRoll.text,
+                              "hscPassingYear": (_hscPassingYear.text == "")
+                                  ? null
+                                  : _hscPassingYear.text,
+                              "sscRoll":
+                                  (_sscRoll.text == "") ? null : _sscRoll.text,
+                              "sscPassingYear": (_sscPassingYear.text == "")
+                                  ? null
+                                  : _sscPassingYear.text,
+                              "hscRegistrationId":
+                                  (_hscRegistrationId.text == "")
+                                      ? null
+                                      : _hscRegistrationId.text,
+                            },
+                          ).onError((error, stackTrace) {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              CoustomeSnackBar(
+                                context,
+                                content: const Text("Failed."),
+                                isFailed: true,
+                              ),
+                            );
+                          }).whenComplete(() {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              CoustomeSnackBar(
+                                context,
+                                content: const Text("Saved."),
+                              ),
+                            );
+                          });
+                        } else {
+                          await widget.documentSnapshot.reference.set(
+                            {
+                              "name": (_name.text == "") ? null : _name.text,
+                              "gstRoll":
+                                  (_gstRoll.text == "") ? null : _gstRoll.text,
+                              "gstApplicationId": (_gstApplicationId.text == "")
+                                  ? null
+                                  : _gstApplicationId.text,
+                              "gstPassword": (_gstPassword.text == "")
+                                  ? null
+                                  : _gstPassword.text,
+                              "hscRoll":
+                                  (_hscRoll.text == "") ? null : _hscRoll.text,
+                              "hscPassingYear": (_hscPassingYear.text == "")
+                                  ? null
+                                  : _hscPassingYear.text,
+                              "sscRoll":
+                                  (_sscRoll.text == "") ? null : _sscRoll.text,
+                              "sscPassingYear": (_sscPassingYear.text == "")
+                                  ? null
+                                  : _sscPassingYear.text,
+                              "hscRegistrationId":
+                                  (_hscRegistrationId.text == "")
+                                      ? null
+                                      : _hscRegistrationId.text,
+                            },
+                          ).onError((error, stackTrace) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("! Failed."),
+                              ),
+                            );
+                          }).whenComplete(() {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                CoustomeSnackBar(context,
+                                    content: const Text("Saved.")));
+                          });
+                        }
+                        _saveController.setIsLoading = false;
                       },
+                      child: _saveController.isLoading
+                          ? const CupertinoActivityIndicator()
+                          : const Text("Save"),
                     );
-                  } else {
-                    await widget.documentSnapshot.reference.set(
-                      {
-                        "name": (_name.text == "") ? null : _name.text,
-                        "gstRoll": (_gstRoll.text == "") ? null : _gstRoll.text,
-                        "gstApplicationId": (_gstApplicationId.text == "")
-                            ? null
-                            : _gstApplicationId.text,
-                        "gstPassword": (_gstPassword.text == "")
-                            ? null
-                            : _gstPassword.text,
-                        "hscRoll": (_hscRoll.text == "") ? null : _hscRoll.text,
-                        "hscPassingYear": (_hscPassingYear.text == "")
-                            ? null
-                            : _hscPassingYear.text,
-                        "sscRoll": (_sscRoll.text == "") ? null : _sscRoll.text,
-                        "sscPassingYear": (_sscPassingYear.text == "")
-                            ? null
-                            : _sscPassingYear.text,
-                        "hscRegistrationId": (_hscRegistrationId.text == "")
-                            ? null
-                            : _hscRegistrationId.text,
-                      },
-                    );
-                  }
-                  _saveController.setIsLoading = false;
-                },
-                child: _saveController.isLoading
-                    ? const CupertinoActivityIndicator()
-                    : const Text("Save"),
-              ),
+                  }),
             ],
           )
         ],
