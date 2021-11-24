@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gst_todo/src/features/home/widgets/edit_university_detail_alert_dialog.dart';
 import 'package:gst_todo/src/features/uviversity_details.page/pages/university_pages.dart';
 
 class PendingUniversityPage extends StatefulWidget {
@@ -48,6 +49,17 @@ class _PendingUniversityPageState extends State<PendingUniversityPage> {
                             documentSnapshot: snapshot.data!.docs[index],
                           ),
                         ),
+                      );
+                    },
+                    onLongPress: () {
+                      showCupertinoDialog(
+                        barrierDismissible: true,
+                        context: context,
+                        builder: (context) {
+                          return EditUniversityAlertDialog(
+                            documentSnapshot: snapshot.data!.docs[index],
+                          );
+                        },
                       );
                     },
                     child: Padding(

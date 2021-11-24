@@ -5,8 +5,9 @@ class CoustomeSnackBar extends SnackBar {
       {Key? key, required Widget content, bool isFailed = false})
       : super(
           key: key,
-          backgroundColor:
-              (isFailed) ? Colors.red : Theme.of(context).primaryColor,
+          backgroundColor: (isFailed)
+              ? Theme.of(context).errorColor
+              : Theme.of(context).primaryColor,
           padding: const EdgeInsets.only(
             left: 20,
             right: 8,
