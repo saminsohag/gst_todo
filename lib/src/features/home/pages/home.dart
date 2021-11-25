@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gst_todo/src/features/home/controllers/bottom_index.dart';
-import 'package:gst_todo/src/features/home/pages/done.dart';
-import 'package:gst_todo/src/features/home/pages/pending.dart';
-import 'package:gst_todo/src/features/home/pages/profile_drawer.dart';
+import 'package:gst_todo/src/features/home/widgets/university_list_view.dart';
+import 'package:gst_todo/src/features/home/widgets/profile_drawer.dart';
 import 'package:gst_todo/src/features/home/widgets/add_done_alert_dialog.dart';
 import 'package:gst_todo/src/features/home/widgets/add_pending_alert_dialog.dart';
 import 'package:gst_todo/src/settings/settings_view.dart';
@@ -45,8 +44,12 @@ class _HomePageState extends State<HomePage> {
           ),
           drawer: const ProfileDrawer(),
           body: const [
-            DoneUniversityPage(),
-            PendingUniversityPage(),
+            UniversityListView(
+              isDone: true,
+            ),
+            UniversityListView(
+              isDone: false,
+            ),
           ][_bottomIndexController.index],
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _bottomIndexController.index,

@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:gst_todo/src/features/home/widgets/edit_university_detail_alert_dialog.dart';
 import 'package:gst_todo/src/features/uviversity_details.page/pages/university_pages.dart';
 
-class PendingUniversityPage extends StatefulWidget {
-  const PendingUniversityPage({Key? key}) : super(key: key);
+class UniversityListView extends StatefulWidget {
+  const UniversityListView({Key? key, this.isDone = false}) : super(key: key);
+  final bool isDone;
 
   @override
-  _PendingUniversityPageState createState() => _PendingUniversityPageState();
+  _UniversityListViewState createState() => _UniversityListViewState();
 }
 
-class _PendingUniversityPageState extends State<PendingUniversityPage> {
+class _UniversityListViewState extends State<UniversityListView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -23,7 +24,7 @@ class _PendingUniversityPageState extends State<PendingUniversityPage> {
             .orderBy("universityName")
             .where(
               "done",
-              isEqualTo: false,
+              isEqualTo: widget.isDone,
             )
             .snapshots(includeMetadataChanges: true),
         builder: (context, snapshot) {

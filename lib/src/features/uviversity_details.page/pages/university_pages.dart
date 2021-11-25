@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:gst_todo/src/common/widgets/coustome_snack_bar.dart';
-import 'package:gst_todo/src/features/content/pages/content.dart';
+import 'package:gst_todo/src/features/uviversity_details.page/controllers/font_size_controller.dart';
 import 'package:gst_todo/src/features/uviversity_details.page/controllers/selected_item_controller.dart';
 import 'package:gst_todo/src/features/uviversity_details.page/services/firebase_service.dart';
+import 'package:gst_todo/src/features/uviversity_details.page/widgets/message_text_tile.dart';
 
 class UniversityDetailPage extends StatefulWidget {
   const UniversityDetailPage({Key? key, required this.documentSnapshot})
@@ -22,12 +23,14 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
   final ScrollController _scrollController = ScrollController();
   final SelectedItemController _selectedItemController =
       SelectedItemController();
+  final FontSizeController _fontSizeController = FontSizeController();
   @override
   void dispose() {
     super.dispose();
     _text.dispose();
     _scrollController.dispose();
     _selectedItemController.dispose();
+    _fontSizeController.dispose();
   }
 
   @override
@@ -87,145 +90,68 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
       body: Column(
         children: [
           Expanded(
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: widget.documentSnapshot.reference
-                    .collection("contents")
-                    .orderBy("time", descending: true)
-                    .snapshots(includeMetadataChanges: true),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data!.docs.isEmpty) {
-                      return const Center(
-                        child: Text("Empty"),
-                      );
-                    }
-                    return AnimatedBuilder(
-                        animation: _selectedItemController,
-                        builder: (context, child) {
-                          return ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            itemCount: snapshot.data!.docs.length,
-                            reverse: true,
-                            controller: _scrollController,
-                            itemBuilder: (context, index) {
-                              bool _isSelected = _selectedItemController.list
-                                  .contains(snapshot
-                                      .data!.docs[index].reference.path);
-                              return Container(
-                                  color: (_isSelected)
-                                      ? Theme.of(context).primaryColorLight
-                                      : Colors.transparent,
-                                  child: InkWell(
-                                    onTap: (_selectedItemController
-                                            .list.isEmpty)
-                                        ? () {
-                                            Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                              builder: (context) => ContentPage(
-                                                documentSnapshot:
-                                                    snapshot.data!.docs[index],
-                                              ),
-                                            ));
-                                          }
-                                        : () {
-                                            if (_selectedItemController.list
-                                                .contains(snapshot
-                                                    .data!
-                                                    .docs[index]
-                                                    .reference
-                                                    .path)) {
-                                              _selectedItemController.remove(
-                                                  snapshot.data!.docs[index]
-                                                      .reference.path);
-                                            } else {
-                                              _selectedItemController.addItem(
-                                                snapshot.data!.docs[index]
-                                                    .reference.path,
-                                                snapshot.data!.docs[index]
-                                                    .data()["text"],
-                                              );
-                                            }
-                                          },
-                                    onLongPress: () {
-                                      if (_selectedItemController.list.contains(
-                                          snapshot.data!.docs[index].reference
-                                              .path)) {
-                                        _selectedItemController.remove(snapshot
+            child: GestureDetector(
+              onScaleStart: (value) {
+                _fontSizeController.tempFontSize = _fontSizeController.fontSize;
+              },
+              onScaleUpdate: (value) {
+                _fontSizeController.setFontSize =
+                    _fontSizeController.tempFontSize * value.scale;
+              },
+              onScaleEnd: (value) {
+                _fontSizeController.tempFontSize = _fontSizeController.fontSize;
+              },
+              child: AnimatedBuilder(
+                  animation: _fontSizeController,
+                  builder: (context, child) {
+                    return Container(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: widget.documentSnapshot.reference
+                            .collection("contents")
+                            .orderBy("time", descending: true)
+                            .snapshots(includeMetadataChanges: true),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data!.docs.isEmpty) {
+                              return const Center(
+                                child: Text("Empty"),
+                              );
+                            }
+                            return AnimatedBuilder(
+                              animation: _selectedItemController,
+                              builder: (context, child) {
+                                return ListView.builder(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  itemCount: snapshot.data!.docs.length,
+                                  reverse: true,
+                                  controller: _scrollController,
+                                  itemBuilder: (context, index) {
+                                    bool _isSelected = _selectedItemController
+                                        .list
+                                        .contains(snapshot
                                             .data!.docs[index].reference.path);
-                                      } else {
-                                        _selectedItemController.addItem(
-                                          snapshot
-                                              .data!.docs[index].reference.path,
-                                          snapshot.data!.docs[index]
-                                              .data()["text"],
-                                        );
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black
-                                                        .withOpacity(0.2),
-                                                    blurRadius: 3,
-                                                  ),
-                                                ],
-                                                color: (_isSelected)
-                                                    ? Theme.of(context)
-                                                        .primaryColor
-                                                    : Theme.of(context)
-                                                        .cardColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(14),
-                                                child: Text(
-                                                  "${snapshot.data!.docs[index].data()["text"]}",
-                                                  softWrap: true,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 50,
-                                            child: Icon(
-                                              Icons.check_circle_rounded,
-                                              color: (snapshot
-                                                      .data!
-                                                      .docs[index]
-                                                      .metadata
-                                                      .hasPendingWrites)
-                                                  ? Theme.of(context)
-                                                      .disabledColor
-                                                      .withOpacity(0.2)
-                                                  : Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ));
-                            },
-                          );
-                        });
-                  } else {
-                    return const Center(
-                      child: CupertinoActivityIndicator(),
+                                    return MessageTextTile(
+                                      isSelected: _isSelected,
+                                      documentSnapshot:
+                                          snapshot.data!.docs[index],
+                                      selectedItemController:
+                                          _selectedItemController,
+                                      fontSize: _fontSizeController.fontSize,
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          } else {
+                            return const Center(
+                              child: CupertinoActivityIndicator(),
+                            );
+                          }
+                        },
+                      ),
                     );
-                  }
-                },
-              ),
+                  }),
             ),
           ),
           Container(
@@ -243,6 +169,7 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                 builder: (context, child) {
                   if (_selectedItemController.list.isNotEmpty) {
                     return Material(
+                      color: Theme.of(context).scaffoldBackgroundColor,
                       child: SizedBox(
                         height: 57,
                         child: Row(
@@ -378,10 +305,7 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                             disabledColor: Theme.of(context)
                                 .disabledColor
                                 .withOpacity(0.1),
-                            color: (Theme.of(context).brightness ==
-                                    Brightness.light)
-                                ? Theme.of(context).primaryColor
-                                : Theme.of(context).primaryColorLight,
+                            color: Theme.of(context).colorScheme.secondary,
                           );
                         },
                       ),
