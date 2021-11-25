@@ -72,7 +72,8 @@ class _PendingUniversityPageState extends State<PendingUniversityPage> {
                                 )
                               : Icon(
                                   Icons.check_box,
-                                  color: Theme.of(context).primaryColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   size: 20,
                                 ),
                           Expanded(

@@ -22,10 +22,11 @@ class SettingsView extends StatelessWidget {
         title: const Text('Settings'),
       ),
       body: ListView(
+        padding: const EdgeInsets.all(10),
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: DropdownButton<ThemeMode>(
+          ListTile(
+            title: const Text("Theme"),
+            trailing: DropdownButton<ThemeMode>(
               value: Provider.of<SettingsController>(context).themeMode,
               onChanged:
                   Provider.of<SettingsController>(context).updateThemeMode,
@@ -45,18 +46,19 @@ class SettingsView extends StatelessWidget {
               ],
             ),
           ),
-          Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    HomePage.routeName, (route) => false);
-              },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(100, 45),
-              ),
-              child: const Text("LogOut"),
+          const SizedBox(
+            height: 20,
+          ),
+          OutlinedButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  HomePage.routeName, (route) => false);
+            },
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size(100, 45),
             ),
+            child: const Text("LogOut"),
           ),
         ],
       ),

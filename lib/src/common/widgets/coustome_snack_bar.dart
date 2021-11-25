@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CoustomeSnackBar extends SnackBar {
   CoustomeSnackBar(BuildContext context,
-      {Key? key, required Widget content, bool isFailed = false})
+      {Key? key, required String content, bool isFailed = false})
       : super(
           key: key,
           backgroundColor: (isFailed)
@@ -16,7 +16,11 @@ class CoustomeSnackBar extends SnackBar {
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              content,
+              Text(
+                content,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(padding: EdgeInsets.zero),
                   onPressed: () {

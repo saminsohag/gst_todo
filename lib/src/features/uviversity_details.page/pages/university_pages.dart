@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
+import 'package:gst_todo/src/common/widgets/coustome_snack_bar.dart';
 import 'package:gst_todo/src/features/content/pages/content.dart';
 import 'package:gst_todo/src/features/uviversity_details.page/controllers/selected_item_controller.dart';
 import 'package:gst_todo/src/features/uviversity_details.page/services/firebase_service.dart';
@@ -50,12 +52,24 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                     initialData: widget.documentSnapshot,
                     builder: (context, snapshot) {
                       if (_selectedItemController.list.isNotEmpty) {
-                        return TextButton(
-                          onPressed: () {},
-                          child: Text("${_selectedItemController.list.length}"),
-                          style: TextButton.styleFrom(
-                              primary:
-                                  Theme.of(context).scaffoldBackgroundColor),
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: SizedBox(
+                              height: 35,
+                              width: 35,
+                              child: OutlinedButton(
+                                onPressed: () {},
+                                child: Text(
+                                    "${_selectedItemController.list.length}"),
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(color: Colors.white),
+                                  padding: EdgeInsets.zero,
+                                  primary: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
                         );
                       }
                       return IconButton(
@@ -74,7 +88,7 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
         children: [
           Expanded(
             child: Container(
-              color: Theme.of(context).primaryColorLight.withOpacity(0.35),
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: widget.documentSnapshot.reference
                     .collection("contents")
@@ -127,8 +141,11 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                                                       .reference.path);
                                             } else {
                                               _selectedItemController.addItem(
-                                                  snapshot.data!.docs[index]
-                                                      .reference.path);
+                                                snapshot.data!.docs[index]
+                                                    .reference.path,
+                                                snapshot.data!.docs[index]
+                                                    .data()["text"],
+                                              );
                                             }
                                           },
                                     onLongPress: () {
@@ -138,8 +155,12 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                                         _selectedItemController.remove(snapshot
                                             .data!.docs[index].reference.path);
                                       } else {
-                                        _selectedItemController.addItem(snapshot
-                                            .data!.docs[index].reference.path);
+                                        _selectedItemController.addItem(
+                                          snapshot
+                                              .data!.docs[index].reference.path,
+                                          snapshot.data!.docs[index]
+                                              .data()["text"],
+                                        );
                                       }
                                     },
                                     child: Padding(
@@ -160,7 +181,7 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                                                     ? Theme.of(context)
                                                         .primaryColor
                                                     : Theme.of(context)
-                                                        .scaffoldBackgroundColor,
+                                                        .cardColor,
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                               ),
@@ -187,7 +208,8 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                                                       .disabledColor
                                                       .withOpacity(0.2)
                                                   : Theme.of(context)
-                                                      .primaryColor,
+                                                      .colorScheme
+                                                      .secondary,
                                             ),
                                           )
                                         ],
@@ -208,12 +230,11 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
           ),
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
+              color: Theme.of(context).scaffoldBackgroundColor,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.5),
-                  blurRadius: 10,
-                  spreadRadius: 3,
+                  blurRadius: 5,
                 )
               ],
             ),
@@ -228,6 +249,39 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            if (_selectedItemController.list.length == 1)
+                              IconButton(
+                                onPressed: () async {
+                                  if (!(_selectedItemController
+                                          .listText.length ==
+                                      1)) {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      CoustomeSnackBar(
+                                        context,
+                                        content: "!Failed",
+                                        isFailed: true,
+                                      ),
+                                    );
+
+                                    return;
+                                  }
+                                  String text =
+                                      _selectedItemController.listText[0];
+                                  await Clipboard.setData(
+                                      ClipboardData(text: text));
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    CoustomeSnackBar(
+                                      context,
+                                      content: "Copied",
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.copy),
+                              ),
                             IconButton(
                               onPressed: () {
                                 FirebaseService()
@@ -264,25 +318,25 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                               decoration: InputDecoration(
                                 fillColor: Theme.of(context)
                                     .disabledColor
-                                    .withOpacity(0.05),
+                                    .withOpacity(0.10),
                                 isDense: true,
                                 filled: true,
                                 border: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.black,
-                                    width: 1,
+                                    width: 0.1,
                                   ),
                                 ),
                                 focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.black,
-                                    width: 1,
+                                    width: 0.1,
                                   ),
                                 ),
                                 enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.black,
-                                    width: 1,
+                                    width: 0.1,
                                   ),
                                 ),
                                 contentPadding: const EdgeInsets.all(10),
@@ -321,7 +375,13 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                             icon: const Icon(
                               Icons.send,
                             ),
-                            color: Theme.of(context).primaryColor,
+                            disabledColor: Theme.of(context)
+                                .disabledColor
+                                .withOpacity(0.1),
+                            color: (Theme.of(context).brightness ==
+                                    Brightness.light)
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context).primaryColorLight,
                           );
                         },
                       ),

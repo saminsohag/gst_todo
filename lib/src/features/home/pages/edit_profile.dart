@@ -232,7 +232,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               CoustomeSnackBar(
                                 context,
-                                content: const Text("Failed."),
+                                content: "Failed.",
                                 isFailed: true,
                               ),
                             );
@@ -241,7 +241,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               CoustomeSnackBar(
                                 context,
-                                content: const Text("Saved."),
+                                content: "Saved.",
                               ),
                             );
                           });
@@ -281,8 +281,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           }).whenComplete(() {
                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
                             ScaffoldMessenger.of(context).showSnackBar(
-                                CoustomeSnackBar(context,
-                                    content: const Text("Saved.")));
+                                CoustomeSnackBar(context, content: "Saved."));
                           });
                         }
                         _saveController.setIsLoading = false;

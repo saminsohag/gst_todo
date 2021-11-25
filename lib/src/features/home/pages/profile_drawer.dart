@@ -46,7 +46,8 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                                         : "${snapshot.data!["name"] ?? "Anonymous"}",
                                     style: TextStyle(
                                       color: Theme.of(context)
-                                          .scaffoldBackgroundColor,
+                                          .colorScheme
+                                          .onPrimary,
                                       fontWeight: FontWeight.w600,
                                       fontSize: 23,
                                     ),
@@ -57,8 +58,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                             Text(
                               "${FirebaseAuth.instance.currentUser!.email}",
                               style: TextStyle(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
+                                color: Theme.of(context).colorScheme.onPrimary,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -71,7 +71,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                         child: FloatingActionButton.small(
                           elevation: 10,
                           backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
+                              Theme.of(context).colorScheme.onPrimary,
                           foregroundColor: Theme.of(context).primaryColor,
                           onPressed: (!snapshot.hasData)
                               ? null
