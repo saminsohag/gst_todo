@@ -45,9 +45,11 @@ class _HomePageState extends State<HomePage> {
           drawer: const ProfileDrawer(),
           body: const [
             UniversityListView(
+              key: ValueKey("done"),
               isDone: true,
             ),
             UniversityListView(
+              key: ValueKey("pending"),
               isDone: false,
             ),
           ][_bottomIndexController.index],
