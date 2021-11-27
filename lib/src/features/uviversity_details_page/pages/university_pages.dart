@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gst_todo/src/common/widgets/coustome_snack_bar.dart';
 import 'package:gst_todo/src/features/uviversity_details_page/controllers/font_size_controller.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/controllers/selected_item_controller.dart';
+import 'package:gst_todo/src/features/uviversity_details_page/controllers/message_list_controller.dart';
+import 'package:gst_todo/src/features/uviversity_details_page/models/message.dart';
 import 'package:gst_todo/src/features/uviversity_details_page/services/firebase_service.dart';
 import 'package:gst_todo/src/features/uviversity_details_page/widgets/message_text_tile.dart';
 
@@ -21,15 +23,20 @@ class UniversityDetailPage extends StatefulWidget {
 class _UniversityDetailPageState extends State<UniversityDetailPage> {
   final TextEditingController _text = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final SelectedItemController _selectedItemController =
-      SelectedItemController();
   final FontSizeController _fontSizeController = FontSizeController();
+  final MessageListController _messageListController = MessageListController();
+  @override
+  void initState() {
+    _messageListController.initialize(widget.documentSnapshot.reference);
+    super.initState();
+  }
+
   @override
   void dispose() {
     super.dispose();
     _text.dispose();
     _scrollController.dispose();
-    _selectedItemController.dispose();
+    _messageListController.dispose();
     _fontSizeController.dispose();
   }
 
@@ -38,9 +45,9 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: AnimatedBuilder(
-            animation: _selectedItemController,
+            animation: _messageListController,
             builder: (context, child) {
-              if (_selectedItemController.list.isNotEmpty) {
+              if (_messageListController.totalSelectation() != 0) {
                 return const Text("Select");
               }
               return Text(
@@ -48,13 +55,13 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
             }),
         actions: [
           AnimatedBuilder(
-              animation: _selectedItemController,
+              animation: _messageListController,
               builder: (context, child) {
                 return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                     stream: widget.documentSnapshot.reference.snapshots(),
                     initialData: widget.documentSnapshot,
                     builder: (context, snapshot) {
-                      if (_selectedItemController.list.isNotEmpty) {
+                      if (_messageListController.totalSelectation() != 0) {
                         return Center(
                           child: Padding(
                             padding: const EdgeInsets.only(right: 8.0),
@@ -62,9 +69,11 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                               height: 35,
                               width: 35,
                               child: OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _messageListController.selectAll();
+                                },
                                 child: Text(
-                                    "${_selectedItemController.list.length}"),
+                                    "${(_messageListController.totalSelectation() == _messageListController.list.length) ? "All" : _messageListController.totalSelectation()}"),
                                 style: OutlinedButton.styleFrom(
                                   side: const BorderSide(color: Colors.white),
                                   padding: EdgeInsets.zero,
@@ -106,44 +115,36 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                   builder: (context, child) {
                     return Container(
                       color: Theme.of(context).scaffoldBackgroundColor,
-                      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                        stream: widget.documentSnapshot.reference
-                            .collection("contents")
-                            .orderBy("time", descending: true)
-                            .snapshots(includeMetadataChanges: true),
+                      child: AnimatedBuilder(
+                        animation: _messageListController,
                         builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data!.docs.isEmpty) {
+                          if (_messageListController.isLoaded) {
+                            if (_messageListController.list.isEmpty) {
                               return const Center(
                                 child: Text("Empty"),
                               );
                             }
-                            return AnimatedBuilder(
-                              animation: _selectedItemController,
-                              builder: (context, child) {
-                                return ListView.builder(
-                                  padding: const EdgeInsets.only(bottom: 10),
-                                  itemCount: snapshot.data!.docs.length,
-                                  reverse: true,
-                                  controller: _scrollController,
-                                  itemBuilder: (context, index) {
-                                    bool _isSelected = _selectedItemController
-                                        .list
-                                        .contains(snapshot
-                                            .data!.docs[index].reference.path);
-                                    return MessageTextTile(
-                                      isSelected: _isSelected,
-                                      documentSnapshot:
-                                          snapshot.data!.docs[index],
-                                      selectedItemController:
-                                          _selectedItemController,
-                                      fontSize: _fontSizeController.fontSize,
-                                    );
-                                  },
+                            return ListView.builder(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              itemCount: _messageListController.list.length,
+                              reverse: true,
+                              controller: _scrollController,
+                              itemBuilder: (context, index) {
+                                return MessageTextTile(
+                                  isSelected: _messageListController
+                                      .list[index].isSelected,
+                                  documentSnapshot: _messageListController
+                                      .list[index].document,
+                                  messageListController: _messageListController,
+                                  index: index,
+                                  fontSize: _fontSizeController.fontSize,
                                 );
                               },
                             );
                           } else {
+                            if (_messageListController.list.isNotEmpty) {
+                              _messageListController.clearList();
+                            }
                             return const Center(
                               child: CupertinoActivityIndicator(),
                             );
@@ -165,9 +166,9 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
               ],
             ),
             child: AnimatedBuilder(
-                animation: _selectedItemController,
+                animation: _messageListController,
                 builder: (context, child) {
-                  if (_selectedItemController.list.isNotEmpty) {
+                  if (_messageListController.totalSelectation() != 0) {
                     return Material(
                       color: Theme.of(context).scaffoldBackgroundColor,
                       child: SizedBox(
@@ -176,11 +177,11 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            if (_selectedItemController.list.length == 1)
+                            if (_messageListController.totalSelectation() == 1)
                               IconButton(
                                 onPressed: () async {
-                                  if (!(_selectedItemController
-                                          .listText.length ==
+                                  if (!(_messageListController
+                                          .totalSelectation() ==
                                       1)) {
                                     ScaffoldMessenger.of(context)
                                         .hideCurrentSnackBar();
@@ -194,8 +195,11 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
 
                                     return;
                                   }
+                                  Message? _tempmsg = _messageListController
+                                      .getOnlySelectedDocument();
+                                  if (_tempmsg == null) return;
                                   String text =
-                                      _selectedItemController.listText[0];
+                                      _tempmsg.document.data()["text"];
                                   await Clipboard.setData(
                                       ClipboardData(text: text));
                                   ScaffoldMessenger.of(context)
@@ -211,9 +215,9 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                               ),
                             IconButton(
                               onPressed: () {
-                                FirebaseService()
-                                    .deletDocs(_selectedItemController.list);
-                                _selectedItemController.clear();
+                                FirebaseService().deletDocs(
+                                    _messageListController
+                                        .getSelectedDocumentPaths());
                               },
                               icon: const Icon(Icons.delete),
                             ),

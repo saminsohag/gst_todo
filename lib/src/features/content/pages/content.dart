@@ -68,8 +68,10 @@ class _ContentPageState extends State<ContentPage> {
                                   decoration: InputDecoration(
                                     contentPadding: const EdgeInsets.all(10),
                                     focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Colors.black,
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
                                       ),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -94,6 +96,7 @@ class _ContentPageState extends State<ContentPage> {
                         if (_editMode.enabled) ...[
                           Expanded(
                             child: TextButton(
+                              key: const ValueKey("cancle button"),
                               onPressed: () {
                                 _editMode.setEnabled = _editMode.notEnabled;
                               },
@@ -107,6 +110,7 @@ class _ContentPageState extends State<ContentPage> {
                           ),
                           Expanded(
                             child: TextButton(
+                              key: const ValueKey("save button"),
                               onPressed: () {
                                 if (_textController.text.isEmpty) {
                                   ScaffoldMessenger.of(context)
@@ -131,6 +135,7 @@ class _ContentPageState extends State<ContentPage> {
                         if (_editMode.notEnabled) ...[
                           Expanded(
                             child: TextButton(
+                              key: const ValueKey("edit button"),
                               onPressed: () {
                                 _textController.text =
                                     snapshot.data!.data()!["text"] ?? "";

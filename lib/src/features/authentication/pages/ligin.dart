@@ -34,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),
+        reverse: true,
         children: [
           const SizedBox(
             height: 10,
@@ -41,10 +42,42 @@ class _LoginPageState extends State<LoginPage> {
           AutofillGroup(
             child: Column(
               children: [
+                RichText(
+                  text: TextSpan(
+                    text: "GST",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 55,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ),
+                    children: [
+                      const TextSpan(
+                        text: " ",
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                      TextSpan(
+                        text: "Todo",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 55,
+                ),
                 TextField(
                   controller: _email,
-                  decoration: const InputDecoration(
-                    label: Text("Email"),
+                  decoration: InputDecoration(
+                    label: const Text("Email"),
+                    fillColor:
+                        Theme.of(context).disabledColor.withOpacity(0.035),
+                    filled: true,
                   ),
                   autofillHints: const [AutofillHints.email],
                 ),
@@ -53,8 +86,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 TextField(
                   controller: _password,
-                  decoration: const InputDecoration(
-                    label: Text("Password"),
+                  decoration: InputDecoration(
+                    label: const Text("Password"),
+                    fillColor:
+                        Theme.of(context).disabledColor.withOpacity(0.035),
+                    filled: true,
                   ),
                   obscureText: true,
                   autofillHints: const [AutofillHints.password],
@@ -71,15 +107,18 @@ class _LoginPageState extends State<LoginPage> {
                         style: const TextStyle(color: Colors.red),
                       );
                     } else {
-                      return const SizedBox();
+                      return const Text("");
                     }
                   },
+                ),
+                const SizedBox(
+                  height: 40,
                 ),
                 AnimatedBuilder(
                     animation: _authController,
                     builder: (context, snapshot) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           ElevatedButton(
                             onPressed: () async {
@@ -114,6 +153,37 @@ class _LoginPageState extends State<LoginPage> {
                             child: (_authController.isLoading)
                                 ? const CupertinoActivityIndicator()
                                 : const Text("LogIn"),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  height: 1,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "OR",
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  height: 1,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                            ],
                           ),
                           ElevatedButton(
                             onPressed: () async {

@@ -4,10 +4,6 @@ import 'package:gst_todo/src/features/home/pages/home.dart';
 import 'package:provider/provider.dart';
 import 'settings_controller.dart';
 
-/// Displays the various settings that can be customized by the user.
-///
-/// When a user changes a setting, the SettingsController is updated and
-/// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatelessWidget {
   const SettingsView({
     Key? key,
@@ -21,33 +17,38 @@ class SettingsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(10),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ListTile(
-            title: const Text("Theme"),
-            trailing: DropdownButton<ThemeMode>(
-              value: Provider.of<SettingsController>(context).themeMode,
-              onChanged:
-                  Provider.of<SettingsController>(context).updateThemeMode,
-              items: const [
-                DropdownMenuItem(
-                  value: ThemeMode.system,
-                  child: Text('System Theme'),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(10),
+              children: [
+                ListTile(
+                  tileColor: Theme.of(context).cardColor,
+                  title: const Text("Theme"),
+                  trailing: DropdownButton<ThemeMode>(
+                    value: Provider.of<SettingsController>(context).themeMode,
+                    onChanged: Provider.of<SettingsController>(context)
+                        .updateThemeMode,
+                    items: const [
+                      DropdownMenuItem(
+                        value: ThemeMode.system,
+                        child: Text('System Theme'),
+                      ),
+                      DropdownMenuItem(
+                        value: ThemeMode.light,
+                        child: Text('Light Theme'),
+                      ),
+                      DropdownMenuItem(
+                        value: ThemeMode.dark,
+                        child: Text('Dark Theme'),
+                      )
+                    ],
+                  ),
                 ),
-                DropdownMenuItem(
-                  value: ThemeMode.light,
-                  child: Text('Light Theme'),
-                ),
-                DropdownMenuItem(
-                  value: ThemeMode.dark,
-                  child: Text('Dark Theme'),
-                )
               ],
             ),
-          ),
-          const SizedBox(
-            height: 20,
           ),
           OutlinedButton(
             onPressed: () async {
@@ -58,7 +59,16 @@ class SettingsView extends StatelessWidget {
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(100, 45),
             ),
-            child: const Text("LogOut"),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.logout),
+                SizedBox(
+                  width: 10,
+                ),
+                Text("LogOut"),
+              ],
+            ),
           ),
         ],
       ),

@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,
           theme: ThemeData(
-            scaffoldBackgroundColor: const Color.fromARGB(255, 230, 240, 250),
+            scaffoldBackgroundColor: const Color.fromARGB(255, 230, 235, 240),
             inputDecorationTheme: InputDecorationTheme(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

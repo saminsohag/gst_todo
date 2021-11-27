@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gst_todo/src/features/home/widgets/edit_university_detail_alert_dialog.dart';
-import 'package:gst_todo/src/features/uviversity_details.page/pages/university_pages.dart';
+import 'package:gst_todo/src/features/uviversity_details_page/pages/university_pages.dart';
 
 class UniversityListView extends StatefulWidget {
   const UniversityListView({Key? key, this.isDone = false}) : super(key: key);
@@ -67,16 +67,16 @@ class _UniversityListViewState extends State<UniversityListView> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Row(
                         children: [
-                          (snapshot.data!.docs[index].metadata.hasPendingWrites)
-                              ? const SizedBox(
-                                  width: 20,
-                                )
-                              : Icon(
-                                  Icons.check_box,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  size: 20,
-                                ),
+                          Icon(
+                            Icons.check_box,
+                            color: (snapshot.data!.docs[index].metadata
+                                    .hasPendingWrites)
+                                ? Theme.of(context)
+                                    .disabledColor
+                                    .withOpacity(0.2)
+                                : Theme.of(context).colorScheme.secondary,
+                            size: 20,
+                          ),
                           Expanded(
                             child: ListTile(
                               title: Text(
