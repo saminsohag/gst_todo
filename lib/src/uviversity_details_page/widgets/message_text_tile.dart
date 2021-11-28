@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gst_todo/src/features/content/pages/content.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/controllers/message_list_controller.dart';
+import 'package:gst_todo/src/content/content_page.dart';
+import 'package:gst_todo/src/uviversity_details_page/controllers/message_list_controller.dart';
 
 class MessageTextTile extends StatelessWidget {
   const MessageTextTile({

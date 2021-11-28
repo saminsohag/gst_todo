@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gst_todo/src/features/home/widgets/edit_university_detail_alert_dialog.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/pages/university_pages.dart';
+import 'package:gst_todo/src/uviversity_details_page/pages/university_pages.dart';
+
+import 'alert_dialog_edit_university_detail.dart';
 
 class UniversityListView extends StatefulWidget {
   const UniversityListView({Key? key, this.isDone = false}) : super(key: key);

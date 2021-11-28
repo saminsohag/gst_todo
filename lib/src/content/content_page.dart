@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gst_todo/src/common/widgets/coustome_snack_bar.dart';
-import 'package:gst_todo/src/features/content/controllers/edit_mode.dart';
+import 'package:gst_todo/src/content/edit_mode_controller.dart';
 
 class ContentPage extends StatefulWidget {
   const ContentPage({Key? key, required this.documentSnapshot})
@@ -13,7 +13,7 @@ class ContentPage extends StatefulWidget {
 }
 
 class _ContentPageState extends State<ContentPage> {
-  final EditMode _editMode = EditMode();
+  final EditModeController _editMode = EditModeController();
   late final TextEditingController _textController;
   @override
   void initState() {

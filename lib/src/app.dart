@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:gst_todo/src/features/authentication/pages/ligin.dart';
-import 'package:gst_todo/src/features/home/pages/home.dart';
+import 'package:gst_todo/src/home/home_page.dart';
 import 'package:provider/provider.dart';
+import 'authentication/ligin_page.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gst_todo/src/features/home/pages/edit_profile.dart';
+import 'package:gst_todo/src/profile/edit_profile.dart';
 
 class ProfileDrawer extends StatefulWidget {
   const ProfileDrawer({Key? key}) : super(key: key);

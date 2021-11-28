@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gst_todo/src/common/controllers/error_text_controller.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/services/firebase_service.dart';
+import 'package:gst_todo/src/uviversity_details_page/services/firebase_service.dart';
 
 class EditUniversityAlertDialog extends StatefulWidget {
   const EditUniversityAlertDialog({Key? key, required this.documentSnapshot})

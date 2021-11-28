@@ -5,11 +5,11 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gst_todo/src/common/widgets/coustome_snack_bar.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/controllers/font_size_controller.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/controllers/message_list_controller.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/models/message.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/services/firebase_service.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/widgets/message_text_tile.dart';
+import 'package:gst_todo/src/uviversity_details_page/controllers/font_size_controller.dart';
+import 'package:gst_todo/src/uviversity_details_page/controllers/message_list_controller.dart';
+import 'package:gst_todo/src/uviversity_details_page/models/message.dart';
+import 'package:gst_todo/src/uviversity_details_page/services/firebase_service.dart';
+import 'package:gst_todo/src/uviversity_details_page/widgets/message_text_tile.dart';
 
 class UniversityDetailPage extends StatefulWidget {
   const UniversityDetailPage({Key? key, required this.documentSnapshot})

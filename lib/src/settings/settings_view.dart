@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gst_todo/src/features/home/pages/home.dart';
+import 'package:gst_todo/src/home/home_page.dart';
 import 'package:provider/provider.dart';
 import 'settings_controller.dart';
 

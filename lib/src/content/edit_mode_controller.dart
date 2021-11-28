@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class EditMode with ChangeNotifier {
+class EditModeController with ChangeNotifier {
   bool _enabled = false;
   bool get enabled => _enabled;
   bool get notEnabled => !_enabled;

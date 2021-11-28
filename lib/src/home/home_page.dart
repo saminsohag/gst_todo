@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gst_todo/src/features/home/controllers/bottom_index.dart';
-import 'package:gst_todo/src/features/home/widgets/university_list_view.dart';
-import 'package:gst_todo/src/features/home/widgets/profile_drawer.dart';
-import 'package:gst_todo/src/features/home/widgets/add_done_alert_dialog.dart';
-import 'package:gst_todo/src/features/home/widgets/add_pending_alert_dialog.dart';
+import 'package:gst_todo/src/home/bottom_index_controller.dart';
+import 'package:gst_todo/src/home/widgets/alert_dialog_add_done.dart';
+import 'package:gst_todo/src/home/widgets/alert_dialog_add_pending.dart';
+import 'package:gst_todo/src/profile/profile_drawer.dart';
+import 'package:gst_todo/src/home/widgets/university_list_view.dart';
 import 'package:gst_todo/src/settings/settings_view.dart';
 
 class HomePage extends StatefulWidget {

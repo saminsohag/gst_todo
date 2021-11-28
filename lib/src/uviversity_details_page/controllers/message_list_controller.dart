@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gst_todo/src/features/uviversity_details_page/models/message.dart';
+import 'package:gst_todo/src/uviversity_details_page/models/message.dart';
 
 class MessageListController with ChangeNotifier {
   bool _isLoaded = false;
