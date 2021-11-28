@@ -40,7 +40,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                           children: [
                             (!snapshot.hasData)
                                 ? const CupertinoActivityIndicator()
-                                : Text(
+                                : SelectableText(
                                     (!snapshot.data!.exists)
                                         ? "Anonymous"
                                         : "${snapshot.data!["name"] ?? "Anonymous"}",
@@ -55,7 +55,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                             const SizedBox(
                               height: 3,
                             ),
-                            Text(
+                            SelectableText(
                               "${FirebaseAuth.instance.currentUser!.email}",
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
@@ -99,7 +99,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     title: const Text("GST ROLL:"),
                     trailing: (!snapshot.hasData)
                         ? const CupertinoActivityIndicator()
-                        : Text(
+                        : SelectableText(
                             (!snapshot.data!.exists)
                                 ? "null"
                                 : "${snapshot.data!["gstRoll"] ?? "null"}",
@@ -109,7 +109,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     title: const Text("GST Application Id:"),
                     trailing: (!snapshot.hasData)
                         ? const CupertinoActivityIndicator()
-                        : Text(
+                        : SelectableText(
                             (!snapshot.data!.exists)
                                 ? "null"
                                 : "${snapshot.data!["gstApplicationId"] ?? "null"}",
@@ -119,7 +119,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     title: const Text("GST Password:"),
                     trailing: (!snapshot.hasData)
                         ? const CupertinoActivityIndicator()
-                        : Text(
+                        : SelectableText(
                             (!snapshot.data!.exists)
                                 ? "null"
                                 : "${snapshot.data!["gstPassword"] ?? "null"}",
@@ -129,7 +129,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     title: const Text("HSC Roll:"),
                     trailing: (!snapshot.hasData)
                         ? const CupertinoActivityIndicator()
-                        : Text(
+                        : SelectableText(
                             (!snapshot.data!.exists)
                                 ? "null"
                                 : "${snapshot.data!["hscRoll"] ?? "null"}",
@@ -139,7 +139,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     title: const Text("HSC passing year:"),
                     trailing: (!snapshot.hasData)
                         ? const CupertinoActivityIndicator()
-                        : Text(
+                        : SelectableText(
                             (!snapshot.data!.exists)
                                 ? "null"
                                 : "${snapshot.data!["hscPassingYear"] ?? "null"}",
@@ -149,7 +149,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     title: const Text("SSC Roll:"),
                     trailing: (!snapshot.hasData)
                         ? const CupertinoActivityIndicator()
-                        : Text(
+                        : SelectableText(
                             (!snapshot.data!.exists)
                                 ? "null"
                                 : "${snapshot.data!["sscRoll"] ?? "null"}",
@@ -159,7 +159,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     title: const Text("SSC passing year:"),
                     trailing: (!snapshot.hasData)
                         ? const CupertinoActivityIndicator()
-                        : Text(
+                        : SelectableText(
                             (!snapshot.data!.exists)
                                 ? "null"
                                 : "${snapshot.data!["sscPassingYear"] ?? "null"}",
@@ -169,7 +169,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     title: const Text("HSC Registration No:"),
                     trailing: (!snapshot.hasData)
                         ? const CupertinoActivityIndicator()
-                        : Text(
+                        : SelectableText(
                             (!snapshot.data!.exists)
                                 ? "null"
                                 : "${snapshot.data!["hscRegistrationId"] ?? "null"}",
