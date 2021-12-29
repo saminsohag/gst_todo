@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: NotificationListener(
         onNotification: (OverscrollIndicatorNotification notification) {
-          notification.disallowGlow();
+          notification.disallowIndicator();
           return true;
         },
         child: ListView(

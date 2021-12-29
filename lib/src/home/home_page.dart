@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gst_todo/src/home/bottom_index_controller.dart';
 import 'package:gst_todo/src/home/widgets/alert_dialog_add_done.dart';
 import 'package:gst_todo/src/home/widgets/alert_dialog_add_pending.dart';
+import 'package:gst_todo/src/news/news_page.dart';
 import 'package:gst_todo/src/profile/profile_drawer.dart';
 import 'package:gst_todo/src/home/widgets/university_list_view.dart';
 import 'package:gst_todo/src/settings/settings_view.dart';
@@ -52,6 +53,7 @@ class _HomePageState extends State<HomePage> {
               key: ValueKey("pending"),
               isDone: false,
             ),
+            NewsPage(),
           ][_bottomIndexController.index],
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _bottomIndexController.index,
@@ -66,6 +68,10 @@ class _HomePageState extends State<HomePage> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.pending),
                 label: "Pending",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.document_scanner_outlined),
+                label: "News",
               ),
             ],
           ),
