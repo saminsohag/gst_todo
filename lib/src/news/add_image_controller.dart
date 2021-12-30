@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class AddImageController with ChangeNotifier {
+  bool _isPosting = false;
+  bool get isPosting => _isPosting;
   bool _addImageMode = false;
   bool get addImageMode => _addImageMode;
   final List<String> _imagePathList = [];
   List<String> get imagePathList => _imagePathList;
   bool _uploadingImages = false;
   bool get uploadingImages => _uploadingImages;
+  set setIsPosting(bool value) {
+    if (_isPosting == value) return;
+    _isPosting = value;
+    notifyListeners();
+  }
 
   void addImagePath(String path) async {
     if (_uploadingImages) return;
@@ -65,6 +73,34 @@ class AddImageController with ChangeNotifier {
     _imagePathList.clear();
     notifyListeners();
     return uids;
+  }
+
+  postContant(String? text) async {
+    if (_isPosting) {
+      return;
+    }
+    _isPosting = true;
+    notifyListeners();
+
+    if (FirebaseAuth.instance.currentUser == null) {
+      return;
+    }
+    await AddImageController().uploadImages(_imagePathList).then(
+      (images) {
+        if (images == null) return;
+        FirebaseFirestore.instance.collection("news").add(
+          {
+            "uid": FirebaseAuth.instance.currentUser!.uid,
+            "text": text,
+            "images": images,
+            "timeStamp": FieldValue.serverTimestamp(),
+          },
+        );
+      },
+    );
+    setImageMode = false;
+    _isPosting = false;
+    notifyListeners();
   }
 
   @override

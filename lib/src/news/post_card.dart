@@ -16,11 +16,12 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  final PostCardController _postCardController = PostCardController();
+  late final PostCardController _postCardController;
   final NewsServices _newsServices = NewsServices();
   @override
   void initState() {
-    _postCardController.initializer(widget.documentSnapshot);
+    _postCardController = PostCardController(widget.documentSnapshot)
+      ..initializer();
     super.initState();
   }
 
@@ -136,22 +137,123 @@ class _PostCardState extends State<PostCard> {
                             child: Image.network(
                               _postCardController.images![index],
                               fit: BoxFit.contain,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return AspectRatio(
+                                  aspectRatio: 1 / 1,
+                                  child: Card(
+                                    color: Theme.of(context).canvasColor,
+                                    child: const Icon(
+                                      Icons.image,
+                                      size: 90,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           );
                         },
                       ),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       Container(
-                        constraints: const BoxConstraints(minHeight: 70),
+                        constraints: const BoxConstraints(minHeight: 10),
                         child: Text(
                           _postCardController.text ?? "...",
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Divider(
+                      height: 1,
+                    ),
+                    SizedBox(
+                      height: 40,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                  "${_postCardController.totalLike ?? ".."} Likes"),
+                              style: TextButton.styleFrom(
+                                primary:
+                                    Theme.of(context).colorScheme.onSurface,
+                                alignment: Alignment.centerLeft,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {},
+                              child: const Text("0 Comments"),
+                              style: TextButton.styleFrom(
+                                primary:
+                                    Theme.of(context).colorScheme.onSurface,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Divider(
+                      height: 1,
+                    ),
+                    SizedBox(
+                      height: 55,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                _postCardController.like();
+                              },
+                              child: const Icon(Icons.thumb_up),
+                              style: TextButton.styleFrom(
+                                primary: (_postCardController.isLiked ?? false)
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            color: Theme.of(context).dividerColor,
+                            width: 1,
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {},
+                              child: const Icon(Icons.comment),
+                              style: TextButton.styleFrom(
+                                primary:
+                                    Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           );

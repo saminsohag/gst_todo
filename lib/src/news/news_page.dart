@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gst_todo/src/news/add_image_controller.dart';
@@ -233,39 +232,16 @@ class _NewsPageState extends State<NewsPage> {
                                       _addImageController.imagePathList.isEmpty)
                                   ? null
                                   : () async {
-                                      if (_addImageController.uploadingImages) {
-                                        return;
-                                      }
-
-                                      if (FirebaseAuth.instance.currentUser ==
-                                          null) {
-                                        return;
-                                      }
-                                      await AddImageController()
-                                          .uploadImages(
-                                              _addImageController.imagePathList)
-                                          .then(
-                                        (images) {
-                                          if (images == null) return;
-                                          FirebaseFirestore.instance
-                                              .collection("news")
-                                              .add(
-                                            {
-                                              "uid": FirebaseAuth
-                                                  .instance.currentUser!.uid,
-                                              "text": _text.text,
-                                              "images": images,
-                                              "timeStamp":
-                                                  FieldValue.serverTimestamp(),
-                                            },
-                                          );
-                                        },
-                                      );
+                                      FocusScope.of(context).unfocus();
+                                      await _addImageController
+                                          .postContant(_text.text);
                                       _text.clear();
                                     },
-                              icon: const Icon(
-                                Icons.send,
-                              ),
+                              icon: (_addImageController.isPosting)
+                                  ? const CupertinoActivityIndicator()
+                                  : const Icon(
+                                      Icons.send,
+                                    ),
                               disabledColor: Theme.of(context)
                                   .disabledColor
                                   .withOpacity(0.1),

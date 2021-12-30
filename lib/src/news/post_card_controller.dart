@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PostCardController with ChangeNotifier {
+  PostCardController(this._documentSnapshot);
+  final QueryDocumentSnapshot<Map<String, dynamic>> _documentSnapshot;
   bool _isInitialized = false;
   String? _text;
   String? get text => _text;
@@ -11,18 +14,36 @@ class PostCardController with ChangeNotifier {
   String? get timeStamp => _timeStamp;
   List<String>? _images;
   List<String>? get images => _images;
+  int? _totalLike;
+  int? get totalLike => _totalLike;
+  int? _totalComment;
+  int? get totalComment => _totalComment;
 
-  initializer(
-      QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
+  bool? _isLiked;
+  bool? get isLiked => _isLiked;
+
+  initializer() async {
     if (_isInitialized) return;
     _isInitialized = true;
-    _text = documentSnapshot.data()["text"];
-    _images = documentSnapshot.data()["images"].isEmpty
+    _text = _documentSnapshot.data()["text"];
+    _images = _documentSnapshot.data()["images"].isEmpty
         ? []
-        : documentSnapshot.data()["images"].cast<String>();
+        : _documentSnapshot.data()["images"].cast<String>();
     notifyListeners();
 
-    documentSnapshot.reference
+    _documentSnapshot.reference.collection("likes").snapshots().listen(
+      (event) {
+        _totalLike = event.docs.length;
+        _isLiked = false;
+        for (var eatch in event.docs) {
+          if (eatch.id == FirebaseAuth.instance.currentUser!.uid) {
+            _isLiked = true;
+          }
+        }
+        notifyListeners();
+      },
+    );
+    _documentSnapshot.reference
         .snapshots(includeMetadataChanges: true)
         .listen((event) {
       _text = event.data()?["text"];
@@ -34,7 +55,7 @@ class PostCardController with ChangeNotifier {
     });
     FirebaseFirestore.instance
         .collection("users")
-        .doc(documentSnapshot.data()["uid"])
+        .doc(_documentSnapshot.data()["uid"])
         .snapshots()
         .listen(
       (event) {
@@ -42,5 +63,27 @@ class PostCardController with ChangeNotifier {
         notifyListeners();
       },
     );
+  }
+
+  void like() {
+    bool tempIsLiked = false;
+    _documentSnapshot.reference.collection("likes").get().then((value) {
+      for (var eatch in value.docs) {
+        if (eatch.id == FirebaseAuth.instance.currentUser!.uid) {
+          tempIsLiked = true;
+        }
+      }
+      if (tempIsLiked) {
+        _documentSnapshot.reference
+            .collection("likes")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .delete();
+      } else {
+        _documentSnapshot.reference
+            .collection("likes")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set({"lavel": 1});
+      }
+    });
   }
 }
